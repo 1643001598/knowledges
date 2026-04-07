@@ -1,0 +1,78 @@
+# Docker
+- concepts
+  - 镜像
+    - def
+      - 一个只读的模板，包含了运行应用所需的所有内容（代码、运行时、库、环境变量和配置文件）。可以把它看作是一个“安装盘”或“软件包”。
+  - 容器
+    - def
+      - 是镜像的一个运行实例。容器可以被创建、启动、停止、删除。它提供了一个隔离的、轻量级的运行环境。
+  - 仓库
+    - def
+      - 来存储和分发 Docker 镜像的地方。最著名的公共仓库是 Docker Hub（类似于 GitHub for code）。
+- 安装
+  - sudo apt-get update
+sudo apt-get install docker.io
+sudo usermod -aG docker $USER # 将当前用户加入 docker 组，避免每次都用 sudo
+- 命令
+  - basic
+    - 拉取镜像
+      - docker pull
+    - 创建并启动容器
+      - docker run
+    - 管理容器
+      - 查看正在运行的容器
+        - docker ps
+      - 查看所有容器
+        - docker ps -a
+      - 停止一个运行中的容器
+        - dcoker stop <name>/<id>
+      - 启动一个已停止的容器
+        - docker start
+      - 删除一个容器(必须先停止)
+        - docker rm
+      - 进入容器内部
+        - 命令
+          - docker exec -it my-nginx /bin/bash
+        - 参数说明
+          - -i
+            - 保持STDIN打开
+          - -t
+            - 分配一个伪终端
+      - 查看容器日志
+        - docker logs <name>
+    - 管理镜像
+      - 列出本地所有镜像
+        - docker images
+      - 删除本地镜像
+        - docker rmi (-f) <name>
+  - example
+    - nginx
+      - 命令
+        - docker run -d -p 8080:80 --name my-nginx nginx
+      - 参数说明
+        - -d
+          - 让容器在后台运行
+        - -p 8080:80
+          - 端口映射
+本机8080端口被转发到容器内部80端口
+        - --name
+          - 起名
+        - nginx
+          - 要使用的镜像名
+- Dockerfile
+  - def
+    - Dockerfile文件 : 用于定义如何构建应用镜像
+  - 语法系统
+    - 细分主题 1
+  - 命令系统
+    - 构建镜像
+      - 命令
+        - docker build -t my-python-app .
+      - 参数说明
+        - -t
+          - -t 给镜像打一个标签，名字是 my-python-app
+- 更多探索
+  - Docker Compose
+  - 数据持久化
+  - 探索 Docker Hub
+  - 了解如何编写高效的 Dockerfile

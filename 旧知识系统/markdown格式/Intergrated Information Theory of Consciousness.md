@@ -1,0 +1,33 @@
+# Intergrated Information Theory of Consciousness
+- core
+  - nature
+  - source of consciousness
+  - 细分主题 3
+- Definition
+  - explanation
+    - Integrated Information Theory (IIT) offers an explanation for the nature and source of consciousness.
+  - involves&posits
+(the fundamentally subjective nature of consciousness)
+(how to realize it)
+    - IIT’s methodology involves characterizing the fundamentally subjective nature of consciousness and positing the physical attributes necessary for a system to realize it.
+  - Attemptations
+    - balance
+    - Cartesian intuitions: experience is immediate, direct and unified
+    - neuroscience: what must be true for a physical system to be conscious
+- History
+  - Initially proposed by Giulio Tononi in 2004, it claims that consciousness is identical to a certain kind of information, the realization of which requires physical, not merely functional, integration, and which can be measured mathematically according to the phi metric.
+- Feature
+  - architecture
+    - reentrant (pointing inward) architecture consisting of feedback loops, whether neural or computational, will realize consciousness
+  - intergrated information
+    - every one in the component will play a role of the entirety maximally, which equals to consciousness
+  - square with the observation of experiments
+  - identifies the subjective experience of consciousness with objectively mesurable dynamics of a system
+  - phi metric
+- content
+  - The Main Argument
+  - The Phi Metric
+  - Situating the Theory
+  - Implications
+  - Objections
+  - References and Further Reading

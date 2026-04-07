@@ -1,0 +1,14 @@
+# rm技术栈
+- 卡尔曼滤波
+  - eskf
+- rm规则
+- Slam
+- ros2
+- 万向节死锁
+- 计算机通识
+- 工业相机调试与使用
+- Navigation
+- 机器学习
+- docker
+- opencv
+  - pnp

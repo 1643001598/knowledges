@@ -1,0 +1,12 @@
+# D2L（pytorch）
+- 核心包
+  - np
+    - 核心函数
+      - arange(int)
+      - 细分主题 2
+  - npx
+    - 核心函数
+      - set_up()
+- 核心类
+  - 2
+  - test

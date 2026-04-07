@@ -1,0 +1,230 @@
+## 画布 1: 思维导图
+
+# openclaw扫盲
+
+- 项目构成
+  - 核心组件
+    - Gateway
+      - def
+        - 控制平面
+        - 长连接的 WebSocket 服务器（18789）
+          - 负责接收来自所有渠道（WhatsApp, Telegram, Discord 等）的输入
+      - func
+        - 消息路由
+        - 会话管理
+    - Brain
+      - func
+        - 编排 LLM 调用
+          - 将系统提示词、可用工具集（Skills）和上下文发送给模型
+          - 解析返回的工具调用指令
+          - 进入“推理-执行-观察”的循环
+    - Memory
+      - def
+        - 基于本地Markdown文件
+        - 存储在~/.openclaw/memory/目录下
+    - Skills
+      - def
+        - 通过 YAML 和 Markdown 定义的插件
+        - 定义了触发器、权限和执行逻辑
+      - 获取skill
+        - ClawHub
+    - Heartbeat
+      - def
+        - 负责与物理设备（如 macOS 菜单栏应用、iOS/Android 节点）进行通信
+      - func
+        - 实现跨设备的硬件控制（如调用摄像头、截屏或语音唤醒）
+  - 架构逻辑（数据流角度）
+    - 接入层
+      - def
+        - 适配器层
+      - func
+        - 不同社交软件（WhatsApp, Slack 等）的原始消息标准化为系统可处理的事件
+    - 路由层
+      - def
+        - 决定哪个智能体或会话处理当前的请求。
+      - func
+        - session 隔离
+        - 主会话处理私聊
+        - 群聊创建独立的 session
+    - 运行时
+      - def
+        - 执行 LLM 交互的核心环境
+      - func
+        - 模型认证
+        - 令牌配额监控
+        - 异步的工具调用
+    - 执行层
+      - def
+        - LLM生成的 Shell 命令的执行
+      - func
+        - 在安全的沙箱中执行 Shell 命令、浏览器自动化或代码脚本。
+    - 存储层
+  - 技术栈与部署
+    - 核心语言
+      - TypeScript (Node.js 22+)
+      - 采用 pnpm monorepo 管理代码
+        - monorepo （单一代码库）
+          - def
+            - 指将多个相关的项目（例如网关服务器、前端看板、文档、插件 SDK）放在同一个 Git 仓库中管理
+        - pnpm
+          - def
+            - 极其快速且节省磁盘空间的 Node.js 包管理器
+          - ftr
+            - 硬链接（Hard Link）机制
+              - 避免了在不同子项目中重复下载相同的依赖包，极大提升了编译速度
+    - 构建工具
+      - tsdown
+        - def
+          - 基于 Rolldown（用 Rust 编写的打包器）的 TypeScript 编译器
+        - ftr
+          - 取代传统的 tsc 或 esbuild，提供秒级的代码构建体验
+      - oxlint
+        - def
+          - 一个被称为“比原生 ESLint 快 50-100 倍”的代码检查工具
+        - ftr
+          - 由 Rust 编写，不需要复杂的配置就能在毫秒内发现代码中的潜在错误。
+    - 原生应用
+      - Swift (macOS/iOS)
+        - def
+          - 苹果官方语言
+        - ftr
+          - AI 能直接调用系统的 快捷指令 (Shortcuts)、屏幕截图权限和通知中心
+      - Kotlin (Android)
+        - def
+          - 安卓的主流开发语言
+        - ftr
+          - OpenClaw 可以利用 Kotlin 实现后台常驻、读取通知栏消息或通过无障碍服务（Accessibility）来操作其他 App
+    - 安全机制
+      - 身份验证
+        - OPENCLAW_GATEWAY_TOKEN
+      - 本地信任边界
+        - 建议使用
+          - ssh隧道
+          - Tailscale（内网穿透与安全通信）
+            - func
+              - 能让你在不同网络环境下的设备（比如家里的服务器和外出的手机）组成一个私有的局域网
+            - 原理
+              - 基于 WireGuard® 协议的虚拟组网工具
+            - ess
+              - 通过 Tailscale，你的手机客户端可以安全地连接到家里的 OpenClaw 网关，数据全程加密，且不需要配置复杂的防火墙或公网 IP
+  - 特点：两阶段记忆
+    - 处理长对话时的设计
+      - 在 context 窗口即将填满前，会触发一个 “持久笔记写入” (Write durable notes) 步骤
+      - 它先将关键信息提取并存入 learnings.md，然后再进行摘要压缩
+    - ftr
+      - 防止了 AI 在长期交互中出现“遗忘”现象
+- 案例分析
+  - 在github上部署open claw
+    - 步骤
+      - 新建github仓库；创建code space
+      - 安装open claw
+        - macOS
+          - curl -sSL https://openclaw.ai/install.sh | bash
+        - Windows
+          - & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -Tag beta
+        - Linux
+          - curl -sSL https://openclaw.ai/install.sh | bash
+      - 配置
+        - 模型
+          - 参见
+        - 新建机器人
+          - TG（botfather）
+            - /newbot
+            - <name>
+            - 复制token
+      - 启动网关服务
+        - openclaw gateway
+      - 启动GUI服务
+        - TG
+        - web UI
+        - tui
+      - 配置基础信息
+        - 运行位置
+          - github的codespace上
+        - 工作目录
+          - /workspaces/Claw001
+        - github仓库位置
+          - https://github.com/1643001598/Claw001
+        - 开发约定
+          - 每当完成编码任务的时候，都将变更push到仓库
+        - 开发技术栈
+          - Node.js(React)+TypeScript+Tailwind
+        - codespace公网链接
+          - https://stunning-winner-x4vjqx9vp9v3pwq-18789.app.github.dev/chat?session=main
+        - 要求
+          - 每当完成开发后，确保运行前端项目，运行后，请直接发给我项目运行的公网链接，以便于我在手机上访问，注意端口不要和上述公网端口出现冲突
+      - 开发项目
+        - 开发应用
+          - 一个Todo List应用
+        - 要求
+          - 具备基础的功能
+          - UI设计符合现代UI的最佳实践
+  - 诺信科技项目分析
+    - 仓库源码
+      - https://gitee.com/dxw9118/nouxin-java.git
+      - https://gitee.com/dxw9118/nouxin-andorid.git
+      - https://gitee.com/dxw9118/nordson-ios.git
+  - 自动将文章转换为X post
+  - 自动发英文播客
+  - 操纵Claude code进行开发，为之实现Spec Kit开发
+  - 工作时写入skill
+- basic mes
+  - def
+    - 自主 AI 智能体框架
+    - 它不仅仅是一个聊天机器人，而是一个运行在用户本地设备上、具有系统权限并能调用各种工具的“个人助理引擎”
+  - ftr
+    - 本地优先
+    - 多渠道集成
+- 命令系统（元指令）
+  - 元指令
+    - content
+      - /new
+        - 立即切断当前上下文，开启一个全新的会话。这会清空短期记忆，防止之前的对话干扰新的任务。
+      - /s
+        - 强制触发搜索技能。即使 LLM 认为不需要搜索，你也可以通过这个命令要求它检索实时信息。
+      - /m
+  - 常用指令
+    - openclaw
+      - dashborad
+        - 查看关键信息
+      - gateway
+        - 网关服务启动
+        - sub
+          - restart
+            - 重启网关服务
+      - onboard
+        - 全新配置
+      - tui
+        - 命令行交互界面
+- 经验之谈
+  - skills
+  - 一个良性循环
+    - 用户需求 - 执行 - 观察 - 调试 - 编码为技能 - 推送github - 重复
+  - 擅长调用外部工具
+    - Claude code
+  - skills安装问题
+    - 细分主题 1
+- 好用的skills
+  - agent-browser
+    - 浏览器自动化（Rust headless）
+  - find-skills
+    - 发现和安装新技能
+  - proactive-agent
+    - 主动式 AI 代理（WAL Protocol）
+  - searxng
+    - 隐私保护搜索引擎（SearXNG）
+  - self-improving-agent
+    - 记录学习、错误、持续改进
+  - skill-vetter
+    - 安全审查第三方 skills
+
+## 画布 2: 画布 2
+
+# openclaw扫盲
+
+- 项目架构（why it is）
+- 基本信息
+  - 定义（what it is）
+  - 特性（where to use）
+  - 作用（how it (is to be) used）
+- openclaw版本历史

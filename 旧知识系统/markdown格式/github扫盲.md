@@ -1,0 +1,42 @@
+# github扫盲
+
+- action
+  - def
+    - github自动化流水线
+  - 实例
+    - CI/CD
+    - 免费云服务器
+    - 解决docker网络问题
+  - 基本概念
+    - workflow
+      - def
+        - 可配置的自动化过程
+        - 由一个或多个 Job（任务） 组成
+        - 在仓库中创建 YAML 文件来定义这些流程，当仓库中发生特定事件（如提交代码、发起 Pull Request）时，Workflow 就会被触发。
+      - 核心观念
+        - Event（事件）
+          - 触发工作流的特定活动。例如：push（推送代码）、pull_request（合并请求）或 schedule（定时任务）。
+        - Jobs（任务）
+          - Workflow 中的一组步骤。默认情况下，多个 Job 是并行运行的，但你也可以设置它们之间的依赖关系。
+        - Steps（步骤）
+          - Job 里的最小执行单元。它可以是一个运行命令（如 npm install）或者是一个 Action。
+        - Actions（动作）
+          - GitHub Actions 平台特有的独立命令，可以组合起来构成步骤。你可以自己写，也可以从 GitHub Marketplace 引用别人造好的轮子（比如 actions/checkout 用来拉取代码）。
+          - steps包含actions和普通的命令
+        - Runners（运行器）
+          - 执行工作流的服务器。GitHub 提供托管的 Runner（如 Ubuntu, Windows, macOS），你也可以使用自己的服务器（Self-hosted runners）。
+      - 结构
+        - workflow - jobs - steps
+      - 位置/文件
+        - .github/workflows
+        - 必须是yaml文件（.yaml/ .yml）
+      - 玩法
+        - CI（持续集成）
+          - 每次提交代码后自动运行单元测试，确保代码没被写烂。
+        - CD（持续部署）
+          - 当测试通过并合并到主分支后，自动将代码部署到服务器（如 AWS, Azure, 阿里云）。
+        - 自动化运维
+          - 比如定期检查依赖更新、自动关闭长时间不活跃的 Issue、或者给新贡献者发送欢迎消息。
+- package
+  - def
+    - 软件制品仓库服务

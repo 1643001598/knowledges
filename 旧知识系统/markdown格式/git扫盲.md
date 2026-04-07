@@ -1,0 +1,25 @@
+# git扫盲
+
+- 指令系统
+  - git
+    - 基础
+      - init
+      - add
+      - commit
+      - push
+    - 进阶
+      - 功能：比较差异
+        - diff
+          - 功能：比较工作目录和暂存区
+            - <无>
+          - 功能：比较暂存区与最新提交的区别
+            - --staged
+          - 功能：比较两个不同的提交
+            - <commit-hash-1> <commit-hash-2>
+          - 功能：比较分支最新提交
+            - branch1 branch2
+      - 功能：比较提交的差异（后有前没有）
+        - log
+          - <branch1>
+          - ..
+          - <branch2>
